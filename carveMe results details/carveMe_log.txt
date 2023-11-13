@@ -1,0 +1,19 @@
+(RecAndAn) idunmariaburgos@Iduns-MacBook-Pro ruminiclostridium_cellulolyticum_H10 % carve --refseq GCF_000022065.1 -o model_cellulolyticum_H10.xml -u grampos --fbc2 --gapfill 
+H10_minimal_xylose,H10_minimal_arabinose,H10_minimal_glucose,H10_minimal_galactose,H10_minimal_mannose,H10_minimal_cellobiose,H10_defined_medium_cellobiose,H10_defined_medium_cellulose,H10_defined_medium_xyloglucan,H10_defined_medium_cellulose_2,H10_basal_medium_xylan 
+-i H10_minimal_glucose --mediadb carveMe_medium.tsv -v -d --soft soft_constraints.tsv --hard hard_constraints.tsv 
+Downloading genome GCF_000022065.1 from NCBI...
+Running diamond...
+diamond blastp -d /Users/idunmariaburgos/opt/anaconda3/envs/RecAndAn/lib/python3.7/site-packages/carveme/data/generated/bigg_proteins.dmnd -q GCF_000022065.1.faa.gz -o GCF_000022065.1.faa.tsv 
+--more-sensitive --top 10
+Loading universe model...
+Loading media library...
+Scoring reactions...
+Reconstructing a single model
+/Users/idunmariaburgos/opt/anaconda3/envs/RecAndAn/lib/python3.7/site-packages/carveme/reconstruction/carving.py:218: UserWarning: Soft constraints contain reactions not in the model:
+R_EX_gal__L_e
+  warnings.warn("Soft constraints contain reactions not in the model:\n" + "\n".join(not_in_model))
+Gap filling for H10_minimal_xylose, H10_minimal_arabinose, H10_minimal_glucose, H10_minimal_galactose, H10_minimal_mannose, H10_minimal_cellobiose, H10_defined_medium_cellobiose, 
+H10_defined_medium_cellulose, H10_defined_medium_xyloglucan, H10_defined_medium_cellulose_2, H10_basal_medium_xylan...
+Added 1 reactions and 0 metabolites
+Done.
+
