@@ -10,4 +10,5 @@ It is composed of the following parts
 - **Copy 2.1.1: Curation of model based - cofactors of glycolysis fermentation pathways.ipynb:** A refined version of the Notebook above. (E.g. I added a new reaction HEX1_gtp because the hexokinase reaction was GTP dependent, instead of just changing the stoichiometry (like I did in the Notebook above). 
 - **2.1.2: Test-Copy** & **Test**: Essentially the same from what I remember. 
 - **2.2.1: Curation of model - False positive gene knockouts.ipynb:** I look into the pathways that are active in the false-positive knockout predictions and try to find the error. 
-- **Copy 2.2.1: Curation of model - False positive gene knockouts.ipynb:**
+- **Copy 2.2.1: Curation of model - False positive gene knockouts.ipynb:** Same as above, but like for 'Copy 2.1.1' I tried to be more consistent than I had previously been.
+- 
