@@ -11,4 +11,9 @@ It is composed of the following parts
 - **2.1.2: Test-Copy** & **Test**: Essentially the same from what I remember. 
 - **2.2.1: Curation of model - False positive gene knockouts.ipynb:** I look into the pathways that are active in the false-positive knockout predictions and try to find the error. 
 - **Copy 2.2.1: Curation of model - False positive gene knockouts.ipynb:** Same as above, but like for 'Copy 2.1.1' I tried to be more consistent than I had previously been.
-- 
+- **2.3.1. Curation of model - Transport and catabolism of galactokinase.ipynb:** Mainly PTS transporters (which also covers galactose metabolism). 
+- **3.1.1. Reconstructing pathways for uptake of oligosaccharides from cellulose.ipynb:**
+- **3.2.1. Reconstructing pathway for uptake of oligosaccharides from xyloglucan.ipynb**
+- **3.3.1. Reconstructing pathways for uptake of oligosaccharides from arabinoxylan.ipynb**
+- **Part 4.1. Curation of model based on results from Part 1.1.1 - NGAM and GAM.ipynb**
+- **Part 5.1. Removing excessive reactions.ipynb**
