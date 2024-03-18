@@ -1,4 +1,7 @@
+.ipynb_checkpoints/*
 notebooks/.ipynb_checkpoints/*
 notebooks/.DS_Store
-.ipynb_checkpoints/*
+input/.ipynb_checkpoints/*
+models/.ipynb_checkpoints/*
 .DS_Store
+
