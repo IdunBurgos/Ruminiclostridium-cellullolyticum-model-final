@@ -29,7 +29,6 @@ DM_cellulose_2	M9 minimal medium (anaerobic)	mn2	Mn2+
 DM_cellulose_2	M9 minimal medium (anaerobic)	ni2	Ni2+
 DM_cellulose_2	M9 minimal medium (anaerobic)	so4	Sulfate
 DM_cellulose_2	M9 minimal medium (anaerobic)	zn2	Zn2+
-MM_xylose	Basic medium	cys__L	Cysteine
 MM_xylose	Mineral solution	nh4	Ammonium
 MM_xylose	Mineral solution	so4	Sulfate
 MM_xylose	Vitamins solution	btn	Biotin
@@ -55,7 +54,6 @@ MM_xylose	M9 minimal medium (anaerobic)	na1	Na+
 MM_xylose	M9 minimal medium (anaerobic)	ni2	Ni2+
 MM_xylose	M9 minimal medium (anaerobic)	pi	Phosphate
 MM_xylose	M9 minimal medium (anaerobic)	zn2	Zn2+
-MM_glucose	Basic medium	cys__L	Cysteine
 MM_glucose	Mineral solution	nh4	Ammonium
 MM_glucose	Mineral solution	so4	Sulfate
 MM_glucose	Vitamins solution	btn	Biotin
@@ -81,7 +79,6 @@ MM_glucose	M9 minimal medium (anaerobic)	na1	Na+
 MM_glucose	M9 minimal medium (anaerobic)	ni2	Ni2+
 MM_glucose	M9 minimal medium (anaerobic)	pi	Phosphate
 MM_glucose	M9 minimal medium (anaerobic)	zn2	Zn2+
-MM_mannose	Basic medium	cys__L	Cysteine
 MM_mannose	Mineral solution	nh4	Ammonium
 MM_mannose	Mineral solution	so4	Sulfate
 MM_mannose	Vitamins solution	btn	Biotin
@@ -226,7 +223,6 @@ DM_cellulose	M9 minimal medium (anaerobic)	cobalt2	Co2+
 DM_cellulose	M9 minimal medium (anaerobic)	fe3	Fe3+
 DM_cellulose	M9 minimal medium (anaerobic)	h2o	H2O
 DM_cellulose	M9 minimal medium (anaerobic)	h	H+
-DM_xyloglucan	Basic medium	cys__L	Cysteine
 DM_xyloglucan	Mineral solution	nh4	Ammonium
 DM_xyloglucan	Mineral solution	so4	Sulfate
 DM_xyloglucan	Vitamins solution	btn	Biotin
@@ -256,7 +252,6 @@ DM_xyloglucan	M9 minimal medium (anaerobic)	na1	Na+
 DM_xyloglucan	M9 minimal medium (anaerobic)	ni2	Ni2+
 DM_xyloglucan	M9 minimal medium (anaerobic)	pi	Phosphate
 DM_xyloglucan	M9 minimal medium (anaerobic)	zn2	Zn2+
-MM_galactose	Basic medium	cys__L	Cysteine
 MM_galactose	Mineral solution	nh4	Ammonium
 MM_galactose	Mineral solution	so4	Sulfate
 MM_galactose	Vitamins solution	btn	Biotin
@@ -283,7 +278,6 @@ MM_galactose	M9 minimal medium (anaerobic)	na1	Na+
 MM_galactose	M9 minimal medium (anaerobic)	ni2	Ni2+
 MM_galactose	M9 minimal medium (anaerobic)	pi	Phosphate
 MM_galactose	M9 minimal medium (anaerobic)	zn2	Zn2+
-MM_arabinose	Basic medium	cys__L	Cysteine
 MM_arabinose	Mineral solution	nh4	Ammonium
 MM_arabinose	Mineral solution	so4	Sulfate
 MM_arabinose	Vitamins solution	btn	Biotin
@@ -310,7 +304,6 @@ MM_arabinose	M9 minimal medium (anaerobic)	na1	Na+
 MM_arabinose	M9 minimal medium (anaerobic)	ni2	Ni2+
 MM_arabinose	M9 minimal medium (anaerobic)	pi	Phosphate
 MM_arabinose	M9 minimal medium (anaerobic)	zn2	Zn2+
-MM_cellobiose	Basic medium	cys__L	Cysteine
 MM_cellobiose	Mineral solution	nh4	Ammonium
 MM_cellobiose	Mineral solution	so4	Sulfate
 MM_cellobiose	Vitamins solution	btn	Biotin
