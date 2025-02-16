@@ -1,0 +1,10 @@
+{
+    "exclusive": [
+        "test_annotation",
+        "test_basic",
+        "test_biomass",
+        "test_matrix",
+        "test_sbo",
+        "test_thermodynamics"
+    ]
+}
