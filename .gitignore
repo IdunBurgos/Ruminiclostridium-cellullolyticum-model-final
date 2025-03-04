@@ -4,5 +4,6 @@ notebooks/.DS_Store
 notebooks/old_notebooks
 input/.ipynb_checkpoints/*
 models/.ipynb_checkpoints/*
+models/other_models/*
 .DS_Store
 
