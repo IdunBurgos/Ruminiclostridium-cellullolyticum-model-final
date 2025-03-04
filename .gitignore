@@ -1,4 +1,6 @@
 .ipynb_checkpoints/*
+.DS_Store
+*.html
 notebooks/.ipynb_checkpoints/*
 notebooks/.DS_Store
 notebooks/old_notebooks
@@ -7,7 +9,10 @@ notebooks/XRef/*
 notebooks/gurobi.log
 input/.ipynb_checkpoints/*
 models/.ipynb_checkpoints/*
+models/.DS_Store
 models/other_models/*
 output/*
-.DS_Store
-*.html
+functions/.ipynb_checkpoints/*
+functions/__pycache__/*
+scripts/.ipynb_checkpoints/*
+figures/.ipynb_checkpoints/*
