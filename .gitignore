@@ -2,6 +2,9 @@
 notebooks/.ipynb_checkpoints/*
 notebooks/.DS_Store
 notebooks/old_notebooks
+notebooks/logs/*
+notebooks/XRef/*
+notebooks/gurobi.log
 input/.ipynb_checkpoints/*
 models/.ipynb_checkpoints/*
 models/other_models/*
