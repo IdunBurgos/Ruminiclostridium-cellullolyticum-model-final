@@ -6,6 +6,7 @@ notebooks/.DS_Store
 notebooks/old_notebooks
 notebooks/logs/*
 notebooks/XRef/*
+notebooks/parameter_estimation_notebooks/*
 notebooks/gurobi.log
 input/.ipynb_checkpoints/*
 models/.ipynb_checkpoints/*
