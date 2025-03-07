@@ -15,5 +15,6 @@ models/other_models/*
 output/*
 functions/.ipynb_checkpoints/*
 functions/__pycache__/*
+functions/functions_not_used/
 scripts/.ipynb_checkpoints/*
 figures/.ipynb_checkpoints/*

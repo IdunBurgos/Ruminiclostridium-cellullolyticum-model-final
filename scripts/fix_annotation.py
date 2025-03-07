@@ -71,13 +71,15 @@ def is_resolvable_http(uri, max_retries=5, base_delay=2):
             return uri, response.status_code < 400  # Return tuple (uri, result)
         
         except requests.Timeout:
-            print(f"Timeout for {uri}, retrying in {base_delay * (2 ** attempt)} seconds. Time limit for next attempt: {min(timeout * 2, 10)}")
+            if attempt==0:
+                print(f"\t Timeout for {uri}. Retrying...")
         
         except requests.ConnectionError:
-            print(f"Connection error for {uri}. Retrying in {base_delay * (2 ** attempt)} seconds. Time limit for next attempt: {min(timeout * 2, 10)}")
+            if attempt==0:
+                print(f"\t Connection error {uri}. Retrying...")
 
         except requests.RequestException as e:
-            print(f"Other request error for {uri}: {e}")
+            print(f"\t Other request error for {uri}: {e}")
             return uri, False  # Return (uri, False)
 
         # Wait before retrying
@@ -87,10 +89,12 @@ def is_resolvable_http(uri, max_retries=5, base_delay=2):
         # Increase timeout but limit it
         timeout = min(timeout * 2, 10)  
 
-    print(f"Failed to connect to {uri} after {max_retries} retries.")
+    print(f"\t Failed to connect to {uri} after {max_retries} retries.")
     return uri, False  # Return (uri, False)
 
+
 # Function to run multiple URI checks in parallel
+
 def check_uris_parallel(uris, max_workers=5):
     results = {}
 
@@ -151,7 +155,7 @@ def process_metadata(model, met,ismet=True):
     # Filter metadata based on valid URIs
     metadata_list_new =[uri for uri in is_included.keys() if is_included.get(uri, True)]
     if len(metadata_list_new)<len(metadata_list):
-        print(f"Removed problematic URIs for {met}")
+        print(f"\t Removed problematic URIs for {met}")
     
     metadata_new = "\n".join(metadata_list_new)
     return metadata_new
@@ -208,7 +212,6 @@ for met in model.metabolites:
     metadata_list_new = []
 
     for element in metadata_list:
-        #changed = 0
 
         # Envipath annotations seem to be incorrect
         if ("envipath" in element) or ("hmdb" in element):
