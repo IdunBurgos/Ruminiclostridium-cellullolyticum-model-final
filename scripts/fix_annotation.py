@@ -63,7 +63,7 @@ def is_resolvable_http(uri, max_retries=5, base_delay=2):
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36"
     }
     
-    timeout = 2  # Initial timeout
+    timeout = 2  
     
     for attempt in range(max_retries):
         try:
@@ -242,6 +242,8 @@ for met in model.metabolites:
     metadata_new = process_metadata(model,met)
     model.metabolites[met].metadata["XMLAnnotation"] = metadata_new
 
+print("save temporary model...")
+reframed.save_cbmodel(model,"../models/RcH10_final.xml")
 
 print("Fixing reactions...")
 for rxn in model.reactions:
