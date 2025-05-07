@@ -4,6 +4,7 @@ from collections import OrderedDict
 import copy
 import requests
 import time
+import json
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
@@ -54,6 +55,13 @@ map_rxns = {"seedr/":"seed.reaction:",
        "biocyc/":"biocyc:"}
 
 
+# The unresolvable URIs according to the curators in BioModels
+with open('../input/biomodels_URIs_MODEL2503030001.json') as json_file:
+    data = json.load(json_file)
+
+unresolvable = [d for d in data if d["status"]=="UNRESOLVABLE"]
+unresolvable_re = [d["originalURI"]+'"/>' for d in unresolvable]
+match_func = lambda s, lst: any(item in s for item in lst)
 M_prefix = ["seed","bigg","kegg"]
 
 
@@ -63,7 +71,7 @@ def is_resolvable_http(uri, max_retries=5, base_delay=2):
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36"
     }
     
-    timeout = 2  
+    timeout = 3
     
     for attempt in range(max_retries):
         try:
@@ -87,7 +95,7 @@ def is_resolvable_http(uri, max_retries=5, base_delay=2):
         time.sleep(wait_time)
 
         # Increase timeout but limit it
-        timeout = min(timeout * 2, 10)  
+        timeout = min(timeout*2,10)
 
     print(f"\t Failed to connect to {uri} after {max_retries} retries.")
     return uri, False  # Return (uri, False)
@@ -217,6 +225,13 @@ for met in model.metabolites:
         if ("envipath" in element) or ("hmdb" in element):
             continue
             
+        if ("biocyc" in element):
+            continue
+
+        if match_func(element,unresolvable_re):
+            print(f"\t Removing unresolvable annotation (according to BioModels): {element}")
+            continue
+            
         element_new = change_uri(element,ismet=True)
         
         # split duplicated items in the database
@@ -272,10 +287,24 @@ for rxn in model.reactions:
         if ("brenda" in element):
             continue
             
-        # exchange reactions should not have other associations with other bigg reactions
+        if ("biocyc" in element):
+            continue
+
+        if match_func(element,unresolvable_re):
+            print(f"\t Removing unresolvable annotation (according to BioModels): {element}")
+            continue
+            
+        # exchange reactions should not have other associations with other bigg reactions    
         if ("bigg" in element) and (rxn[2:].startswith("EX_")) and (rxn[2:] not in element):
             continue
             
+        if 'ec-code' in element:
+            match_ec = re.search(r'ec-code/(.+?)"/>', element)
+            extracted = match_ec.group(1)
+            
+            if not bool(re.fullmatch(r'[\d.]+', extracted)):
+                continue
+                
         element_new = change_uri(element,ismet=False)
         
         metadata_list_new.append(element_new)
