@@ -24,12 +24,11 @@ def add_dynamic_bounds(model, conc_dict,glc_eq_poly_dict,vmax_inner_glc,Km_inner
     for polysac_id,glc_eq_dict in  glc_eq_poly_dict.items():
         
         for met_id,glc_eq in  glc_eq_dict.items():
-            max_import = -vmax_inner_glc*conc_dict[met_id]/ ((Km_inner_glc/glc_eq + conc_dict[met_id])*glc_eq) ## 
+            
+            max_import = -vmax_inner_glc*conc_dict[met_id]/ ((Km_inner_glc + conc_dict[met_id]))#*glc_eq) 
+                
             medium[met_id]=-max_import
-        #if polysac_id =="EX_cellulose_e":
-        #    Ki = 1
-        #    cellulase = -vmax_outer*conc_dict[polysac_id]/((1+((conc_dict["EX_cellb_e"])/Ki))*Km_outer + conc_dict[polysac_id])
-        #else:
+
         cellulase = -vmax_outer*conc_dict[polysac_id]/(Km_outer + conc_dict[polysac_id])
     
         cellulase_real=cellulase
@@ -84,9 +83,7 @@ def dynamic_system_general(t, y,model,rxns,objective_dir,glc_eq_poly_dict,combin
     # Since the calculated fluxes are specific rates, we multiply them by the
     # biomass concentration to get the bulk exchange rates.
 
-
     fluxes =lex_constraints.values
-
     i = 1 
 
     for polysac_id,glc_eq_dict in  glc_eq_poly_dict.items():  
@@ -100,12 +97,11 @@ def dynamic_system_general(t, y,model,rxns,objective_dir,glc_eq_poly_dict,combin
     return fluxes
 
 
-def optimize_parameters_inner_problem_general(combination,model,media,rxns,y0,objective_dir,glc_eq_poly_dict,t_end=False):
+def multiple_polysaccharide_inner_problem(combination,model,media,rxns,y0,objective_dir,glc_eq_poly_dict,t_end=False):
     vmax_inner_glc, Km_inner_glc,vmax_outer, Km_outer= combination
     
     y = []
     
-
     if t_end:
         ts = np.linspace(0, t_end, 1000)   
     else:
@@ -126,8 +122,9 @@ def optimize_parameters_inner_problem_general(combination,model,media,rxns,y0,ob
 
 
 
-
 def multiple_polysaccharide_simulation(combination,model,media,rxns,y0,objective_dir,glc_eq_poly_dict,t_end=False):
+
+    
     C_dict = OrderedDict(zip(rxns,y0))
     C_results_tot = {rxn:{"C":[value],"t":[0]} for rxn,value in C_dict.items()}
     
@@ -139,16 +136,17 @@ def multiple_polysaccharide_simulation(combination,model,media,rxns,y0,objective
 
 
     while sum([C_results_tot[polysac_id]["C"][-1] for polysac_id in glc_eq_poly_dict_copy.keys()]) >1e-1:
-
-        sol = optimize_parameters_inner_problem_general(combination,
+        
+        sol = multiple_polysaccharide_inner_problem(combination,
                                                         model,
                                                         media,
                                                         rxns,
                                                         y0,
                                                         objective_dir_copy,
                                                         glc_eq_poly_dict_copy,
-                                                        t_end=100)
-
+                                                        t_end=t_end)
+        
+            
         ## Update concentrations
         C_results = dict(zip(rxns,sol.y))
 
