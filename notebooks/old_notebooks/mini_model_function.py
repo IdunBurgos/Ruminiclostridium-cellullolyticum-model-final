@@ -5,9 +5,9 @@ import copy
 model_uni = reframed.load_cbmodel("../../models/universe_grampos.xml")
 model = reframed.load_cbmodel("../../models/RcH10_v2.xml")
 
-def build_mini_model(unique_cofactors=True):
+def build_mini_model(unique_cofactors=True,model_id="mini_model"):
     
-    mini_model = reframed.CBModel("mini_model")
+    mini_model = reframed.CBModel(model_id)
     
     # Compartments
     mini_model.add_compartment(reframed.Compartment("C_c","cytosol"))
@@ -36,6 +36,7 @@ def build_mini_model(unique_cofactors=True):
     mini_model.add_metabolite(copy.copy(model.metabolites["M_coa_c"]))
     mini_model.add_metabolite(copy.copy(model.metabolites["M_fdxo_2_2_c"]))
     mini_model.add_metabolite(copy.copy(model.metabolites["M_fdxrd_c"]))
+    mini_model.add_metabolite(copy.copy(model.metabolites["M_amp_c"]))
 
     
     # Tranpsport and exchange of general metabolites
@@ -86,14 +87,15 @@ def build_mini_model(unique_cofactors=True):
     # Glucose to pyruvate
     if unique_cofactors:
         mini_model.add_reaction(copy.copy(model.reactions["R_HEX1_gtp"]))
-    else:
-        mini_model.add_reaction(copy.copy(model_uni.reactions["R_HEX1"]))
-    
-    
-    if unique_cofactors: 
         mini_model.add_reaction(copy.copy(model.reactions["R_PFK_ppi"]))
+        mini_model.add_reaction(copy.copy(model.reactions["R_PYK3"]))
+        mini_model.add_reaction(copy.copy(model.reactions["R_PPDK"]))
+        mini_model.add_reaction(copy.copy(model.reactions["R_ADK1"]))
+
     else:
         mini_model.add_reaction(copy.copy(model_uni.reactions["R_PFK"]))
+        mini_model.add_reaction(copy.copy(model_uni.reactions["R_HEX1"]))
+        
         
     mini_model.add_reaction(copy.copy(model.reactions["R_PGI"]))
     mini_model.add_reaction(copy.copy(model.reactions["R_FBA"]))
@@ -107,7 +109,7 @@ def build_mini_model(unique_cofactors=True):
     
     # Lactate
     mini_model.add_reaction(copy.copy(model.reactions["R_LDH_L"]))
-    mini_model.add_reaction(copy.copy(model.reactions["R_L_LACt3"]))
+    mini_model.add_reaction(copy.copy(model.reactions["R_LACLt2"]))
     
     # Ethanol
     mini_model.add_reaction(copy.copy(model.reactions["R_POR_syn"]))

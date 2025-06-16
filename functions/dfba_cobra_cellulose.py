@@ -2,14 +2,36 @@ import copy
 import cobra
 
 import numpy as np
+import pandas as pd
 
-def add_dynamic_bounds(model, conc_dict):
+from scipy.integrate import solve_ivp
+from scipy.interpolate import interp1d
+from sklearn.metrics import mean_squared_error 
+
+
+cellulose_exp = pd.read_csv("../input/Desvaux2001_batch_data/cellulose_g.csv")
+biomass_exp = pd.read_csv("../input/Desvaux2001_batch_data/biomass_mg.csv")
+
+cellulose_exp = pd.read_csv("../input/Desvaux2001_batch_data/cellulose_g.csv")
+molar_mass = 173.85  # Based on glucose equivalent (based on 0.35 cellobiose and 0.3 glucose)
+cellulose_exp["y mmol"]= cellulose_exp[" y"].map(lambda x: (x/molar_mass)*1000)
+cellulose_exp = cellulose_exp[cellulose_exp.x<70].copy()
+
+biomass_exp = pd.read_csv("../input/Desvaux2001_batch_data/biomass_mg.csv")
+biomass_exp["y g"] = biomass_exp[" y"].map(lambda x: x/1000)
+biomass_exp = biomass_exp[biomass_exp.x<70].copy()
+
+def add_dynamic_bounds(model, conc_dict,combination=[6.01,0.2,5.01,0.2,2.9]):
     """Use external concentrations to bound the uptake flux of glucose."""
     
-    glucose_max_import = -6.01* conc_dict["EX_glc__D_e"] / (0.2 + conc_dict["EX_glc__D_e"])
-    cellobiose_max_import = max((-5.01 * conc_dict["EX_cellb_e"]/ (0.2 + conc_dict["EX_cellb_e"]) ),-0.76)
+    vmax_inner_glc, Km_inner_glc,vmax_inner_cellb, Km_inner_cellb,vmax_outer= combination
+                                                     
+    Km_outer,Ki = [4.4,11]
     
-    cellulase = -2.9*(conc_dict["EX_cellulose_e"]/((1 + (conc_dict["EX_cellb_e"]/11))*4.4 + conc_dict["EX_cellulose_e"]))    
+    glucose_max_import = -vmax_inner_glc* conc_dict["EX_glc__D_e"] / (Km_inner_glc + conc_dict["EX_glc__D_e"])
+    cellobiose_max_import = -vmax_inner_cellb * conc_dict["EX_cellb_e"]/ (Km_inner_cellb + conc_dict["EX_cellb_e"]) 
+    
+    cellulase = -vmax_outer*(conc_dict["EX_cellulose_e"]/((1 + (conc_dict["EX_cellb_e"]/Ki))*Km_outer + conc_dict["EX_cellulose_e"]))    
 
     model.reactions.EX_glc__D_e.lower_bound = glucose_max_import
     model.reactions.EX_cellb_e.lower_bound = cellobiose_max_import
@@ -19,7 +41,7 @@ def add_dynamic_bounds(model, conc_dict):
     
     
     
-def dynamic_system(t, y,model,rxns,objective_dir):
+def dynamic_system(t, y,model,rxns,objective_dir,combination):
     """Calculate the time derivative of external species."""
     rxns_map = copy.copy(rxns)
     rxns_map.append("EX_cellulose_e")
@@ -28,7 +50,7 @@ def dynamic_system(t, y,model,rxns,objective_dir):
     
     # Calculate the specific exchanges fluxes at the given external concentrations.
     with model:
-        cellulase = add_dynamic_bounds(model, conc_dict)
+        cellulase = add_dynamic_bounds(model, conc_dict,combination)
         
         feasibility = cobra.util.fix_objective_as_constraint(model)
 
@@ -59,7 +81,61 @@ def dynamic_system(t, y,model,rxns,objective_dir):
 dynamic_system.pbar = None
 
 
-def infeasible_event(t, y,model,rxns,objective_dir):
+
+
+def optimize_parameters(combination,model,rxns,y0,objective_dir,alternative_solution=False,t_end=False):
+
+    
+    try:
+        if t_end:
+            ts = np.linspace(biomass_exp.iloc[0,0], t_end, 1000)   
+        else:
+            ts = np.linspace(biomass_exp.iloc[0,0], biomass_exp.iloc[biomass_exp["x"].size-1,0], 1000)   
+
+        sol = solve_ivp(
+            fun=dynamic_system,
+            t_span=(ts.min(), ts.max()),
+            y0=y0,
+            t_eval=ts,
+            method='LSODA',
+            events = [infeasible_event],
+            args = (model,rxns,objective_dir,combination)
+        )
+    except Exception as e:
+        print(f"\t had issues with this combination: {combination}\nException: {e}")
+        return 1e6 # Returns high penalty score if combination is infeasible...
+    rxns_extra = rxns.copy()
+    rxns_extra.append("EX_cellulose_e")
+    C_dict_results = dict(zip(rxns_extra,sol.y))
+    
+    # Growth
+    
+    interp_func = interp1d(sol.t,C_dict_results["Growth"], kind='linear', fill_value="extrapolate")
+    y_interp = interp_func(biomass_exp.x.values)
+    
+    score_spec = mean_squared_error(biomass_exp["y g"].values,y_interp)/(biomass_exp["y g"].mean()) 
+    penalty_growth =1000*(score_spec)
+    
+    
+    #  Cellulose
+    interp_func = interp1d(sol.t, C_dict_results["EX_cellulose_e"], kind='linear', fill_value="extrapolate")
+    y_interp = interp_func(cellulose_exp.x)
+    
+    score_spec = mean_squared_error(cellulose_exp["y mmol"],y_interp)/(cellulose_exp["y mmol"].mean()) 
+    penalty_cellulose =10*(score_spec)
+
+    penalty = penalty_growth + penalty_cellulose
+    
+    print(f"\t penalty: {penalty} for combination: {combination}")
+    
+    if alternative_solution:
+        return sol,penalty,{"penalty_growth":penalty_growth,"penalty_cellulose":penalty_cellulose}
+    else:
+        return penalty
+    
+
+
+def infeasible_event(t, y,model,rxns,objective_dir,combination):
     """
     Determine solution feasibility.
 
@@ -75,7 +151,7 @@ def infeasible_event(t, y,model,rxns,objective_dir):
     with model:
 
 
-        add_dynamic_bounds(model, conc_dict)
+        add_dynamic_bounds(model, conc_dict,combination)
 
         feasibility = cobra.util.fix_objective_as_constraint(model)
 

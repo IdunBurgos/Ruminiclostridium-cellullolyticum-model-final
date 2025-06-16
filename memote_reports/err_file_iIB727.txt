@@ -1,0 +1,2 @@
+The current solver interface glpk doesn't support setting the optimality tolerance.
+Writing snapshot report to '../memote_reports/iIB727.html'.

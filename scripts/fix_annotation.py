@@ -73,6 +73,9 @@ def is_resolvable_http(uri, max_retries=5, base_delay=2):
     
     timeout = 3
     
+    if "CHEBI" in uri: # The website needs more time to load...
+        timeout=10
+    
     for attempt in range(max_retries):
         try:
             response = requests.get(uri, allow_redirects=True, timeout=timeout, headers=headers)
@@ -117,6 +120,9 @@ def check_uris_parallel(uris, max_workers=5):
 
 
 def check_uri_validitiy(elements,ismet=True):
+    if len(elements)==0:
+        return {}
+    
     uris = []
     kept_elements = []
     
@@ -147,7 +153,9 @@ def process_metadata(model, met,ismet=True):
         return  # Skip if no metadata
     
     metadata_list = metadata["XMLAnnotation"].split("\n")
-    elements = [element for element in metadata_list if "<rdf:li rdf:resource=" in element]
+    
+    elements = [element for element in metadata_list if ("<rdf:li rdf:resource=" in element)]
+    
     if len(elements)==0:
         return
     
@@ -227,6 +235,8 @@ for met in model.metabolites:
             
         if ("biocyc" in element):
             continue
+            
+            
 
         if match_func(element,unresolvable_re):
             print(f"\t Removing unresolvable annotation (according to BioModels): {element}")
@@ -321,5 +331,5 @@ for rxn in model.reactions:
     metadata_new = process_metadata(model,rxn,ismet=False)
     model.reactions[rxn].metadata["XMLAnnotation"] = metadata_new
     
-print("save model...")
+print("save model '../models/RcH10_final.xml'")
 reframed.save_cbmodel(model,"../models/RcH10_final.xml")

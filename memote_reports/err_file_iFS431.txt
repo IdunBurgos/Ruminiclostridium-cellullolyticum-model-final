@@ -1,0 +1,4 @@
+error: '' is not a valid SBML 'SId'.
+The current solver interface glpk doesn't support setting the optimality tolerance.
+error: No objective coefficients in model. Unclear what should be optimized
+Writing snapshot report to '../memote_reports/iFS431.html'.
