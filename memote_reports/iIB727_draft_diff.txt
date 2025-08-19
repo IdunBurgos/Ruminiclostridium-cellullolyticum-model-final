@@ -1,0 +1,5 @@
+The current solver interface glpk doesn't support setting the optimality tolerance.
+The current solver interface glpk doesn't support setting the optimality tolerance.
+Writing diff report to '../memote_reports/iIB727_draft_diff.html'.
+/Users/idunmariaburgos/opt/anaconda3/envs/model_testing2/lib/python3.11/multiprocessing/resource_tracker.py:254: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '

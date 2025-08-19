@@ -8,8 +8,8 @@ notebooks/logs/*
 notebooks/XRef/*
 notebooks/parameter_estimation_notebooks/*
 notebooks/gurobi.log
-models/other_models/*
 output/*
 functions/__pycache__/*
 functions/functions_not_used/
 .ipynb_checkpoints/
+notebooks/test.xml

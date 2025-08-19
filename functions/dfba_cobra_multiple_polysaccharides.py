@@ -1,4 +1,5 @@
 import cobra
+import reframed # Remove later
 import numpy as np
 import pandas as pd
 from scipy.interpolate import interp1d
@@ -25,7 +26,7 @@ def add_dynamic_bounds(model, conc_dict,glc_eq_poly_dict,vmax_inner_glc,Km_inner
         
         for met_id,glc_eq in  glc_eq_dict.items():
             
-            max_import = -vmax_inner_glc*conc_dict[met_id]/ ((Km_inner_glc + conc_dict[met_id]))#*glc_eq) 
+            max_import = -vmax_inner_glc*conc_dict[met_id]/ ((Km_inner_glc + conc_dict[met_id]))
                 
             medium[met_id]=-max_import
 
@@ -41,7 +42,13 @@ def add_dynamic_bounds(model, conc_dict,glc_eq_poly_dict,vmax_inner_glc,Km_inner
 
 
 def read_model(media,lp_feasibility=True):
-    model = cobra.io.read_sbml_model('../models/RcH10_final.xml')
+    model_ref = reframed.load_cbmodel('../models/RcH10_final.xml')
+    model_ref.reactions.R_GALabc.lb=0
+    model_ref.reactions.R_GALabc.reversible=False
+    reframed.save_cbmodel(model_ref, 'test.xml')
+    
+    #model = cobra.io.read_sbml_model('../models/RcH10_final.xml')
+    model = cobra.io.read_sbml_model('test.xml')
     exchanges_ids = [rxn.id for rxn in model.exchanges]
     media_exchanges = ["EX_"+met+"_e" for met in media["DM_cellobiose"]] 
     medium = model.medium
